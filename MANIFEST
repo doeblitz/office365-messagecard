@@ -1,0 +1,12 @@
+Changes
+lib/Office365/MessageCard.pm
+lib/Office365/MessageCard/Action/OpenUri.pm
+lib/Office365/MessageCard/Image.pm
+lib/Office365/MessageCard/Section.pm
+Makefile.PL
+MANIFEST			This list of files
+README
+t/00-load.t
+t/manifest.t
+t/pod-coverage.t
+t/pod.t
