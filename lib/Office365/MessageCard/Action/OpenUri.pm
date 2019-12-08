@@ -1,4 +1,4 @@
-package Office365::MessageCard::Action::OpenURI;
+package Office365::MessageCard::Action::OpenUri;
 
 use 5.20.0;
 use Modern::Perl '2014';
@@ -13,51 +13,33 @@ use Unicode::Normalize qw( NFD NFC );
 use Data::Dumper; $Data::Dumper::Sortkeys = 1;
 use Method::Signatures;
 
-BEGIN {
-    use Exporter ();
-    use vars qw ($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
-    $VERSION     = 0.01;
-    @ISA         = qw (Exporter);
-    @EXPORT      = qw ();
-    @EXPORT_OK   = qw ();
-    %EXPORT_TAGS = ();
-}
+our $VERSION = 0.01;
 
-use Object::InsideOut; {
+use Object::InsideOut qw(Office365::MessageCard::Action);
 
-    my @name
-	:Field
-	:Type('scalar')
-	:All('name')
-	;
+my @name
+    :Field
+    :Type('scalar')
+    :All('name')
+    ;
 
-    my @targets
-	:Field
-	:Type('HASH')
-	:All('targets')
-	;
+my @targets
+    :Field
+    :Type('HASH')
+    :All('targets')
+    ;
 
-    method as_hash() {
-	my %raw = (
-	    '@type' => 'OpenUri',
-	);
-	if (my $x = $name[$$self]) {
-	    $raw{'name'} = $x;
-	}
-	if (my $x = $targets[$$self]) {
-	    $raw{'targets'} = $x;
-	}
-	return \%raw;
+method as_hash() {
+    my %raw = (
+	'@type' => 'OpenUri',
+    );
+    if (my $x = $name[$$self]) {
+	$raw{'name'} = $x;
     }
-
-    method as_json(:$pretty=0) {
-	my $json = JSON->new()->utf8();
-	if ($pretty) {
-	    $json = $json->pretty()->canonical();
-	}
-	return $json->encode($self->as_hash());
+    if (my $x = $targets[$$self]) {
+	$raw{'targets'} = $x;
     }
-
+    return \%raw;
 }
 
 1;

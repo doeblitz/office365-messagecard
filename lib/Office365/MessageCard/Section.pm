@@ -13,115 +13,144 @@ use Unicode::Normalize qw( NFD NFC );
 use Data::Dumper; $Data::Dumper::Sortkeys = 1;
 use Method::Signatures;
 
-BEGIN {
-    use Exporter ();
-    use vars qw ($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
-    $VERSION     = 0.01;
-    @ISA         = qw (Exporter);
-    @EXPORT      = qw ();
-    @EXPORT_OK   = qw ();
-    %EXPORT_TAGS = ();
+our $VERSION = 0.01;
+
+use Office365::MessageCard::Fact;
+use Office365::MessageCard::Image;
+use Scalar::Util qw(blessed);
+use Object::InsideOut qw(Office365::MessageCard::_Base);
+
+my @title
+    :Field
+    :Type('scalar')
+    :All('title')
+    ;
+
+my @activityImage
+    :Field
+    :Type('scalar')
+    :All('activityImage')
+    ;
+
+my @activityTitle
+    :Field
+    :Type('scalar')
+    :All('activityTitle')
+    ;
+
+my @activitySubtitle
+    :Field
+    :Type('scalar')
+    :All('activitySubtitle')
+    ;
+
+my @activityText
+    :Field
+    :Type('scalar')
+    :All('activityText')
+    ;
+
+my @text
+    :Field
+    :Type('scalar')
+    :All('text')
+    ;
+
+my @facts
+    :Field
+    :Type('list(Office365::MessageCard::Fact)')
+    :All('facts')
+    ;
+
+my @images
+    :Field
+    :Type('list(Office365::MessageCard::Image)')
+    :All('images')
+    ;
+
+my @potentialAction
+    :Field
+    :Type('list(Office365::MessageCard::Action)')
+    :All('potentialAction')
+    ;
+
+method add_fact(@_) {
+    $facts[$$self] //= [];
+    my $obj;
+    if (ref($_[0])
+	and blessed($_[0])
+	and $_[0]->isa('Office365::MessageCard::Fact')) {
+	$obj = $_[0];
+    } else {
+	$obj = Office365::MessageCard::Fact->new(@_);
+    }
+    push $facts[$$self]->@*, $obj;
+    return $obj;
 }
 
-use Object::InsideOut; {
-
-    my @title
-	:Field
-	:Type('scalar')
-	:All('title')
-	;
-
-    my @activityImage
-	:Field
-	:Type('scalar')
-	:All('activityImage')
-	;
-
-    my @activityTitle
-	:Field
-	:Type('scalar')
-	:All('activityTitle')
-	;
-
-    my @activitySubtitle
-	:Field
-	:Type('scalar')
-	:All('activitySubtitle')
-	;
-
-    my @activityText
-	:Field
-	:Type('scalar')
-	:All('activityText')
-	;
-
-    my @text
-	:Field
-	:Type('scalar')
-	:All('text')
-	;
-
-    my @facts
-	:Field
-	:Type('HASH')
-	:All('facts')
-	;
-
-    my @images
-	:Field
-	:Type('list(Office365::MessageCard::Image)')
-	:All('images')
-	;
-
-    my @potentialAction
-	:Field
-	:Type('list(Office365::MessageCard::Action)')
-	:All('potentialAction')
-	;
-
-    method as_hash() {
-	my %raw = (
-	);
-	if (my $x = $title[$$self]) {
-	    $raw{'title'} = $x;
-	}
-	if (my $x = $activityImage[$$self]) {
-	    $raw{'activityImage'} = $x;
-	}
-	if (my $x = $activityTitle[$$self]) {
-	    $raw{'activityTitle'} = $x;
-	}
-	if (my $x = $activitySubtitle[$$self]) {
-	    $raw{'activitySubtitle'} = $x;
-	}
-	if (my $x = $activityText[$$self]) {
-	    $raw{'activityText'} = $x;
-	}
-	if (my $x = $text[$$self]) {
-	    $raw{'text'} = $x;
-	}
-	if (my $x = $facts[$$self]) {
-	    $raw{'facts'} = $x;
-	}
-	if (my $x = $images[$$self]) {
-	    $raw{'images'} =
-		[ map { $_->as_hash() } $x->@* ];
-	}
-	if (my $x = $potentialAction[$$self]) {
-	    $raw{'potentialAction'} =
-		[ map { $_->as_hash() } $x->@* ];
-	}
-	return \%raw;
+method add_image(@_) {
+    $images[$$self] //= [];
+    my $obj;
+    if (ref($_[0])
+	and blessed($_[0])
+	and $_[0]->isa('Office365::MessageCard::Image')) {
+	$obj = $_[0];
+    } else {
+	$obj = Office365::MessageCard::Image->new(@_);
     }
+    push $images[$$self]->@*, $obj;
+    return $obj;
+}
 
-    method as_json(:$pretty=0) {
-	my $json = JSON->new()->utf8();
-	if ($pretty) {
-	    $json = $json->pretty()->canonical();
-	}
-	return $json->encode($self->as_hash());
+method add_action(@_) {
+    $potentialAction[$$self] //= [];
+    my $obj;
+    if (ref($_[0])
+	and blessed($_[0])
+	and $_[0]->isa('Office365::MessageCard::Action')) {
+	$obj = $_[0];
+    } else {
+	# TODO: differentiate by type and delegate to new() in matching class
+	carp("cannot add an ambigous action, need object");
     }
+    push $potentialAction[$$self]->@*, $obj;
+    return $obj;
+}
 
+method as_hash() {
+    my %raw = (
+    );
+    if (my $x = $title[$$self]) {
+	$raw{'title'} = $x;
+    }
+    if (my $x = $activityImage[$$self]) {
+	$raw{'activityImage'} = $x;
+    }
+    if (my $x = $activityTitle[$$self]) {
+	$raw{'activityTitle'} = $x;
+    }
+    if (my $x = $activitySubtitle[$$self]) {
+	$raw{'activitySubtitle'} = $x;
+    }
+    if (my $x = $activityText[$$self]) {
+	$raw{'activityText'} = $x;
+    }
+    if (my $x = $text[$$self]) {
+	$raw{'text'} = $x;
+    }
+    if (my $x = $facts[$$self]) {
+	$raw{'facts'} =
+	    [ map { $_->as_hash() } $x->@* ];
+    }
+    if (my $x = $images[$$self]) {
+	$raw{'images'} =
+	    [ map { $_->as_hash() } $x->@* ];
+    }
+    if (my $x = $potentialAction[$$self]) {
+	$raw{'potentialAction'} =
+	    [ map { $_->as_hash() } $x->@* ];
+    }
+    return \%raw;
 }
 
 1;

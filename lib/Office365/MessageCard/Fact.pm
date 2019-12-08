@@ -1,4 +1,4 @@
-package Office365::MessageCard::Image;
+package Office365::MessageCard::Fact;
 
 use 5.20.0;
 use Modern::Perl '2014';
@@ -17,26 +17,24 @@ our $VERSION = 0.01;
 
 use Object::InsideOut qw(Office365::MessageCard::_Base);
 
-my @image
+my @name
     :Field
     :Type('scalar')
-    :Arg('Name' => 'image', 'Mandatory' => 1)
-    :Acc('image')
+    :Arg('Name' => 'name', 'Mandatory' => 1)
+    :Acc('name')
     ;
 
-my @title
+my @value
     :Field
     :Type('scalar')
-    :All('title')
+    :All('value')
     ;
 
 method as_hash() {
     my %raw = (
-	'image' => $image[$$self],
+	'name' => $name[$$self],
+	'value' => $value[$$self] // '',
     );
-    if (my $x = $title[$$self]) {
-	$raw{'title'} = $x;
-    }
     return \%raw;
 }
 
