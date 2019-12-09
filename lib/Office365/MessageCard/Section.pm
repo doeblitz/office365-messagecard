@@ -17,7 +17,6 @@ our $VERSION = 0.01;
 
 use Office365::MessageCard::Fact;
 use Office365::MessageCard::Image;
-use Scalar::Util qw(blessed);
 use Object::InsideOut qw(Office365::MessageCard::_Base);
 
 my @title
@@ -76,43 +75,21 @@ my @potentialAction
 
 method add_fact(@_) {
     $facts[$$self] //= [];
-    my $obj;
-    if (ref($_[0])
-	and blessed($_[0])
-	and $_[0]->isa('Office365::MessageCard::Fact')) {
-	$obj = $_[0];
-    } else {
-	$obj = Office365::MessageCard::Fact->new(@_);
-    }
+    my $obj = Office365::MessageCard::Fact->_copy_or_new(@_);
     push $facts[$$self]->@*, $obj;
     return $obj;
 }
 
 method add_image(@_) {
     $images[$$self] //= [];
-    my $obj;
-    if (ref($_[0])
-	and blessed($_[0])
-	and $_[0]->isa('Office365::MessageCard::Image')) {
-	$obj = $_[0];
-    } else {
-	$obj = Office365::MessageCard::Image->new(@_);
-    }
+    my $obj = Office365::MessageCard::Image->_copy_or_new(@_);
     push $images[$$self]->@*, $obj;
     return $obj;
 }
 
 method add_action(@_) {
     $potentialAction[$$self] //= [];
-    my $obj;
-    if (ref($_[0])
-	and blessed($_[0])
-	and $_[0]->isa('Office365::MessageCard::Action')) {
-	$obj = $_[0];
-    } else {
-	# TODO: differentiate by type and delegate to new() in matching class
-	carp("cannot add an ambigous action, need object");
-    }
+    my $obj = Office365::MessageCard::Action->_copy_or_new(@_);
     push $potentialAction[$$self]->@*, $obj;
     return $obj;
 }

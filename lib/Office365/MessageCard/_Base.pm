@@ -23,7 +23,21 @@ BEGIN {
     %EXPORT_TAGS = ();
 }
 
+use Scalar::Util qw(blessed);
 use Object::InsideOut;
+
+method _copy_or_new (@_) :Restricted {
+    my $class = blessed($self) // $self;# object or class invocation
+    if (ref($_[0]) and blessed($_[0])) {
+	if ($_[0]->isa($class)) {
+	    return $_[0];
+	} else {
+	    carp "need object of class $class";
+	}
+    } else {
+	return $self->new(@_);
+    }
+}
 
 method as_json(:$pretty=0) {
     my $json = JSON->new()->utf8();
