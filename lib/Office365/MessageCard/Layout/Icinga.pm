@@ -21,16 +21,17 @@ use Office365::MessageCard::Action::OpenUri;
 method new (:$title) {
     my $mc = Office365::MessageCard->new(
 	title => 'Icinga Event',
+	summary => 'something is wrong',
     );
     my $sect = $mc->add_section('title' => $title);
-    $sect->add_image('title' => 'Test Image', 'image' => 'https://some.uri');
+    #$sect->add_image('title' => 'Test Image', 'image' => 'https://some.uri');
     $sect->add_fact('name' => 'host', 'value' => 'some host');
     $sect->add_fact('name' => 'service', 'value' => 'some service');
     $sect->add_fact('name' => 'status', 'value' => 'down');
     $sect->add_action(Office365::MessageCard::Action::OpenUri->new(
 	'name' => 'View in Icinga',
 	'targets' => {
-	    'default' => 'https://some.uri',
+	    'default' => 'https://monitoring.gns-systems.corp/icingaweb2/dashboard',
 	},
     ));
     return $mc;

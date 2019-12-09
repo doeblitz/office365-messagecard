@@ -15,6 +15,7 @@ use Method::Signatures;
 
 our $VERSION = 0.01;
 
+use List::Util qw(pairs);
 use Object::InsideOut qw(Office365::MessageCard::Action);
 
 my @name
@@ -37,7 +38,7 @@ method as_hash() {
 	$raw{'name'} = $x;
     }
     if (my $x = $targets[$$self]) {
-	$raw{'targets'} = $x;
+	$raw{'targets'} = [ map { { 'os' => $_->key(), 'uri' => $_->value() } } pairs($x->%*) ];
     }
     return \%raw;
 }
