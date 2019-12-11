@@ -15,25 +15,104 @@ use Method::Signatures;
 
 our $VERSION = 0.01;
 
+use URI::Escape;
 use Office365::MessageCard;
 use Office365::MessageCard::Action::OpenUri;
 
-method new (:$title) {
+my %color = (
+    # service
+    'OK' => '008000',
+    'WARNING' => 'ffff00',
+    'UNKNOWN' => '808080',
+    'CRITICAL' => 'ff0000',
+    # host
+    'UP' => '008000',
+    'DOWN' => 'ff0000',
+    'UNREACHABLE' => 'ff8700',
+);
+
+method new_host_notification (
+    :$type,
+    :$hostname,
+    :$hostdisplayname,
+    :$state,
+    :$output,
+    :$date,
+    :$ipv4,
+    :$ipv6,
+    :$author,
+    :$comment,
+    :$icingaurl
+) {
     my $mc = Office365::MessageCard->new(
-	title => 'Icinga Event',
-	summary => 'something is wrong',
+	'title' => sprintf("[%s] Host %s is %s!", $type, $hostdisplayname, $state),
+	'summary' => sprintf("[%s] Host %s is %s!", $type, $hostdisplayname, $state),
+	'themeColor' => $color{$state},
     );
-    my $sect = $mc->add_section('title' => $title);
-    #$sect->add_image('title' => 'Test Image', 'image' => 'https://some.uri');
-    $sect->add_fact('name' => 'host', 'value' => 'some host');
-    $sect->add_fact('name' => 'service', 'value' => 'some service');
-    $sect->add_fact('name' => 'status', 'value' => 'down');
-    $sect->add_action(Office365::MessageCard::Action::OpenUri->new(
-	'name' => 'View in Icinga',
-	'targets' => {
-	    'default' => 'https://monitoring.gns-systems.corp/icingaweb2/dashboard',
-	},
-    ));
+    my $sect = $mc->add_section(
+	'title' => sprintf("%s is %s", $hostdisplayname, $state),
+	'text' => $output,
+    );
+    $sect->add_fact('name' => 'host', 'value' => $hostname);
+    $sect->add_fact('name' => 'status', 'value' => $state);
+    $sect->add_fact('name' => 'date', 'value' => $date);
+    $sect->add_fact('name' => 'ipv4', 'value' => $ipv4) if ($ipv4);
+    $sect->add_fact('name' => 'ipv6', 'value' => $ipv6) if ($ipv6);
+    if ($comment) {
+	$sect->add_fact('name' => 'comment by '.$author, 'value' => $comment);
+    }
+    if ($icingaurl) {
+	$sect->add_action(Office365::MessageCard::Action::OpenUri->new(
+	    'name' => 'View in Icinga',
+	    'targets' => {
+		'default' => $icingaurl.'/monitoring/host/show?host='.uri_escape_utf8($hostname),
+	    },
+	));
+    }
+    return $mc;
+}
+
+method new_service_notification (
+    :$type,
+    :$hostname,
+    :$hostdisplayname,
+    :$servicename,
+    :$servicedisplayname,
+    :$state,
+    :$output,
+    :$date,
+    :$ipv4,
+    :$ipv6,
+    :$author,
+    :$comment,
+    :$icingaurl
+) {
+    my $mc = Office365::MessageCard->new(
+	'title' => sprintf("[%s] Service %s on %s is %s!", $type, $servicedisplayname, $hostdisplayname, $state),
+	'summary' => sprintf("[%s] Service %s on %s is %s!", $type, $servicedisplayname, $hostdisplayname, $state),
+	'themeColor' => $color{$state},
+    );
+    my $sect = $mc->add_section(
+	'title' => sprintf("%s on %s is %s", $servicedisplayname, $hostdisplayname, $state),
+	'text' => $output,
+    );
+    $sect->add_fact('name' => 'host', 'value' => $hostname);
+    $sect->add_fact('name' => 'sercice', 'value' => $servicename);
+    $sect->add_fact('name' => 'status', 'value' => $state);
+    $sect->add_fact('name' => 'date', 'value' => $date);
+    $sect->add_fact('name' => 'ipv4', 'value' => $ipv4) if ($ipv4);
+    $sect->add_fact('name' => 'ipv6', 'value' => $ipv6) if ($ipv6);
+    if ($comment) {
+	$sect->add_fact('name' => 'comment by '.$author, 'value' => $comment);
+    }
+    if ($icingaurl) {
+	$sect->add_action(Office365::MessageCard::Action::OpenUri->new(
+	    'name' => 'View in Icinga',
+	    'targets' => {
+		'default' => $icingaurl.'/monitoring/service/show?host='.uri_escape_utf8($hostname).'&service='.uri_escape_utf8($servicename),
+	    },
+	));
+    }
     return $mc;
 }
 
