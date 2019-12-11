@@ -11,6 +11,11 @@ Makefile.PL
 MANIFEST			This list of files
 README
 t/00-load.t
+t/10-messagecard.t
+t/11-helper.t
+t/12-action.t
+t/20-complex.t
+t/40-icinga.t
 t/manifest.t
 t/pod-coverage.t
 t/pod.t
