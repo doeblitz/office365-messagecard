@@ -1,0 +1,21 @@
+Changes
+lib/Office365/MessageCard.pm
+lib/Office365/MessageCard/Action.pm
+lib/Office365/MessageCard/Action/OpenUri.pm
+lib/Office365/MessageCard/Fact.pm
+lib/Office365/MessageCard/Image.pm
+lib/Office365/MessageCard/Layout/Icinga.pm
+lib/Office365/MessageCard/Section.pm
+lib/Office365/MessageCard/_Base.pm
+Makefile.PL
+MANIFEST			This list of files
+README
+t/00-load.t
+t/10-messagecard.t
+t/11-helper.t
+t/12-action.t
+t/20-complex.t
+t/40-icinga.t
+t/manifest.t
+t/pod-coverage.t
+t/pod.t
