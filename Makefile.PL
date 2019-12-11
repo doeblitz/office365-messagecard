@@ -18,8 +18,9 @@ WriteMakefile(
         'Test::More' => 0,
     },
     PREREQ_PM => {
-        #'ABC'              => 1.6,
-        #'Foo::Bar::Module' => 5.0401,
+	'Method::Signatures' => 20160315,
+	'URI::Escape' => 3.31,
+	'Object::InsideOut' => 4.02,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Office365-MessageCard-*' },
