@@ -15,13 +15,28 @@ use Method::Signatures;
 
 our $VERSION = 0.01;
 
+=head1 NAME
+
+OpenUri - OpenUri action for actionable message card
+
+=head1 SYNOPSIS
+
+
+
+=head1 DESCRIPTION
+
+
+
+=cut
+
 use List::Util qw(pairs);
 use Object::InsideOut qw(Office365::MessageCard::Action);
 
 my @name
     :Field
     :Type('scalar')
-    :All('name')
+    :Arg('Name' => 'name', 'Mandatory' => 1)
+    :Acc('name')
     ;
 
 my @targets

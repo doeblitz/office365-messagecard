@@ -15,6 +15,20 @@ use Method::Signatures;
 
 our $VERSION = 0.01;
 
+=head1 NAME
+
+Fact - single fact for list of facts in actionable message card section
+
+=head1 SYNOPSIS
+
+
+
+=head1 DESCRIPTION
+
+
+
+=cut
+
 use Object::InsideOut qw(Office365::MessageCard::_Base);
 
 my @name

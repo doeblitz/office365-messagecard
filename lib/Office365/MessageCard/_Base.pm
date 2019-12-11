@@ -13,15 +13,21 @@ use Unicode::Normalize qw( NFD NFC );
 use Data::Dumper; $Data::Dumper::Sortkeys = 1;
 use Method::Signatures;
 
-BEGIN {
-    use Exporter ();
-    use vars qw ($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
-    $VERSION     = 0.01;
-    @ISA         = qw (Exporter);
-    @EXPORT      = qw ();
-    @EXPORT_OK   = qw ();
-    %EXPORT_TAGS = ();
-}
+our $VERSION = 0.01;
+
+=head1 NAME
+
+_Base - base class for Office365::MessageCard object hierarchy
+
+=head1 SYNOPSIS
+
+
+
+=head1 DESCRIPTION
+
+
+
+=cut
 
 use Scalar::Util qw(blessed);
 use Object::InsideOut;

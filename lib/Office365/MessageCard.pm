@@ -16,6 +16,20 @@ use JSON;
 
 our $VERSION = 0.01;
 
+=head1 NAME
+
+MessageCard - legacy actionable message cards for office365 webhooks
+
+=head1 SYNOPSIS
+
+
+
+=head1 DESCRIPTION
+
+
+
+=cut
+
 use Office365::MessageCard::Action;
 use Office365::MessageCard::Section;
 use Object::InsideOut qw(Office365::MessageCard::_Base);
@@ -59,29 +73,14 @@ my @potentialAction
 
 method add_section(@_) {
     $sections[$$self] //= [];
-    my $obj;
-    if (ref($_[0])
-	and blessed($_[0])
-	and $_[0]->isa('Office365::MessageCard::Section')) {
-	$obj = $_[0];
-    } else {
-	$obj = Office365::MessageCard::Section->new(@_);
-    }
+    my $obj = Office365::MessageCard::Section->_copy_or_new(@_);
     push $sections[$$self]->@*, $obj;
     return $obj;
 }
 
 method add_action(@_) {
     $potentialAction[$$self] //= [];
-    my $obj;
-    if (ref($_[0])
-	and blessed($_[0])
-	and $_[0]->isa('Office365::MessageCard::Action')) {
-	$obj = $_[0];
-    } else {
-	# TODO: differentiate by type and delegate to new() in matching class
-	carp("cannot add an ambigous action, need object");
-    }
+    my $obj = Office365::MessageCard::Action->_copy_or_new(@_);
     push $potentialAction[$$self]->@*, $obj;
     return $obj;
 }

@@ -15,39 +15,56 @@ use Method::Signatures;
 
 our $VERSION = 0.01;
 
+=head1 NAME
+
+Icinga - message card factory with layouts for Icinga2 notifications
+
+=head1 SYNOPSIS
+
+
+
+=head1 DESCRIPTION
+
+
+
+=cut
+
 use URI::Escape;
 use Office365::MessageCard;
 use Office365::MessageCard::Action::OpenUri;
 
-my %color = (
-    # service
-    'OK' => '008000',
-    'WARNING' => 'ffff00',
-    'UNKNOWN' => '808080',
-    'CRITICAL' => 'ff0000',
-    # host
+my %color_host = (
     'UP' => '008000',
     'DOWN' => 'ff0000',
     'UNREACHABLE' => 'ff8700',
 );
 
+my %color_service = (
+    'OK' => '008000',
+    'WARNING' => 'ffff00',
+    'UNKNOWN' => '808080',
+    'CRITICAL' => 'ff0000',
+);
+
 method new_host_notification (
-    :$type,
-    :$hostname,
-    :$hostdisplayname,
-    :$state,
-    :$output,
-    :$date,
+    :$type!,
+    :$hostname!,
+    :$hostdisplayname!,
+    :$state!,
+    :$output!,
+    :$date!,
     :$ipv4,
     :$ipv6,
     :$author,
     :$comment,
     :$icingaurl
 ) {
+    my $color = $color_host{$state};
+    carp("need valid state, one of: ".join(", ", keys %color_host)) unless ($color);
     my $mc = Office365::MessageCard->new(
 	'title' => sprintf("[%s] Host %s is %s!", $type, $hostdisplayname, $state),
 	'summary' => sprintf("[%s] Host %s is %s!", $type, $hostdisplayname, $state),
-	'themeColor' => $color{$state},
+	'themeColor' => $color,
     );
     my $sect = $mc->add_section(
 	'title' => sprintf("%s is %s", $hostdisplayname, $state),
@@ -73,24 +90,26 @@ method new_host_notification (
 }
 
 method new_service_notification (
-    :$type,
-    :$hostname,
-    :$hostdisplayname,
-    :$servicename,
-    :$servicedisplayname,
-    :$state,
-    :$output,
-    :$date,
+    :$type!,
+    :$hostname!,
+    :$hostdisplayname!,
+    :$servicename!,
+    :$servicedisplayname!,
+    :$state!,
+    :$output!,
+    :$date!,
     :$ipv4,
     :$ipv6,
     :$author,
     :$comment,
     :$icingaurl
 ) {
+    my $color = $color_service{$state};
+    carp("need valid state, one of: ".join(", ", keys %color_service)) unless ($color);
     my $mc = Office365::MessageCard->new(
 	'title' => sprintf("[%s] Service %s on %s is %s!", $type, $servicedisplayname, $hostdisplayname, $state),
 	'summary' => sprintf("[%s] Service %s on %s is %s!", $type, $servicedisplayname, $hostdisplayname, $state),
-	'themeColor' => $color{$state},
+	'themeColor' => $color,
     );
     my $sect = $mc->add_section(
 	'title' => sprintf("%s on %s is %s", $servicedisplayname, $hostdisplayname, $state),

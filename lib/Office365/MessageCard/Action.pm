@@ -15,6 +15,20 @@ use Method::Signatures;
 
 our $VERSION = 0.01;
 
+=head1 NAME
+
+Action - base class for actionable message card actions
+
+=head1 SYNOPSIS
+
+
+
+=head1 DESCRIPTION
+
+
+
+=cut
+
 use Object::InsideOut qw(Office365::MessageCard::_Base);
 
 1;
