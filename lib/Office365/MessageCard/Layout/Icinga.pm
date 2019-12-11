@@ -97,7 +97,7 @@ method new_service_notification (
 	'text' => $output,
     );
     $sect->add_fact('name' => 'host', 'value' => $hostname);
-    $sect->add_fact('name' => 'sercice', 'value' => $servicename);
+    $sect->add_fact('name' => 'service', 'value' => $servicename);
     $sect->add_fact('name' => 'status', 'value' => $state);
     $sect->add_fact('name' => 'date', 'value' => $date);
     $sect->add_fact('name' => 'ipv4', 'value' => $ipv4) if ($ipv4);
