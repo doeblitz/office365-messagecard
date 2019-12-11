@@ -6,10 +6,10 @@ Create message cards in an object oriented manner and serialize them as
 JSON for transmission as webhook payload.
 
 Based on the following documentation:
-L<https://docs.microsoft.com/en-gb/outlook/actionable-messages/message-card-reference>
-L<https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-format>
-L<https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card>
-L<https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/connectors-using>
+    https://docs.microsoft.com/en-gb/outlook/actionable-messages/message-card-reference
+    https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-format
+    https://docs.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#office-365-connector-card
+    https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/connectors-using
 
 
 INSTALLATION
@@ -51,7 +51,7 @@ This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a
 copy of the full license at:
 
-L<http://www.perlfoundation.org/artistic_license_2_0>
+http://www.perlfoundation.org/artistic_license_2_0
 
 Any use, modification, and distribution of the Standard or Modified
 Versions is governed by this Artistic License. By using, modifying or
